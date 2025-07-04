@@ -86,7 +86,9 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<WholesaleOrderItem> WholesaleOrderItems { get; set; }
 
-   
+    public DbSet<ProductCategory> ProductCategory { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>

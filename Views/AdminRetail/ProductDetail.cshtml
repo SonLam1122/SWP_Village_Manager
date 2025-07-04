@@ -1,0 +1,63 @@
+﻿@model Village_Manager.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_AdminWarehouse.cshtml";
+
+}
+
+<div class="container-fluid mt-4 px-4">
+    <div class="row justify-content-end">
+        <div class="col-md-10 offset-md-2">
+            <div class="card shadow p-4">
+                <h3 class="mb-4">Chi tiết sản phẩm</h3>
+
+                <div class="text-center mb-4">
+                    @foreach (var image in Model.ProductImages)
+                    {
+                        <div class="mb-3">
+                            <img src="@image.ImageUrl" alt="Product Image"
+                                 class="img-thumbnail border"
+                                 style="max-width: 250px; height: auto;" />
+                            @* <p class="text-muted mt-1">@image.Description</p> *@
+                        </div>
+                    }
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-4">Tên sản phẩm</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+
+                    <dt class="col-sm-4">Loại sản phẩm</dt>
+                    <dd class="col-sm-8">@Model.ProductType </dd>
+
+                    <dt class="col-sm-4">Giá</dt>
+                    <dd class="col-sm-8">@Model.Price.ToString("N0") đ</dd>
+
+                    <dt class="col-sm-4">Số lượng</dt>
+                    <dd class="col-sm-8">@Model.Quantity</dd>
+
+                    <dt class="col-sm-4">Hạn sử dụng</dt>
+                    <dd class="col-sm-8">@Model.ExpirationDate?.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">Ngày chế biến</dt>
+                    <dd class="col-sm-8">@Model.ProcessingTime?.ToString("dd/MM/yyyy")</dd>
+
+                    @if (Model.Farmer != null)
+                    {
+                        <dt class="col-sm-4">Nông dân</dt>
+                        <dd class="col-sm-8">@Model.Farmer.FullName</dd>
+
+                        <dt class="col-sm-4">SĐT</dt>
+                        <dd class="col-sm-8">@Model.Farmer.Phone</dd>
+
+                        <dt class="col-sm-4">Địa chỉ</dt>
+                        <dd class="col-sm-8">@Model.Farmer.Address</dd>
+                    }
+                </dl>
+
+                <a asp-action="Products" class="btn btn-secondary mt-3">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+

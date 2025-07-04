@@ -1,0 +1,108 @@
+﻿@model List<Village_Manager.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_AdminWarehouse.cshtml";
+}
+
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-body-wrapper">
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card card-table">
+                            <div class="card-body">
+                                <div class="title-header option-title d-sm-flex d-block">
+                                    <h5>Products List</h5>
+                                    <div class="right-options d-flex" style="gap: 15px;">
+                                        <form asp-controller="AdminRetail" asp-action="SearchProducts" method="get" class="d-flex" style="gap: 10px;">
+                                            <input type="text" name="keyword" class="form-control" placeholder="Search product..." />
+                                            <button type="submit" class="btn btn-outline-primary">Search</button>
+                                        </form>
+
+                                        <ul>
+                                            <li><a class="btn btn-solid" href="add-new-product.html">Add Product</a></li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table all-package theme-table table-product" id="table_id">
+                                        <thead>
+                                            <tr>
+                                                <th>Product Image</th>
+                                                <th>Product Name</th>
+                                                <th>Category</th>
+                                                <th>Current Qty</th>
+                                                <th>Price</th>
+                                                <th>Option</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var product in Model)
+                                            {
+                                                var imageUrl = product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png";
+                                                <tr>
+                                                    <td><img src="@imageUrl" width="60" height="60" /></td>
+                                                    <td>@product.Name</td>
+                                                    <td>@product.ProductType</td>
+                                                    <td>@product.Quantity</td>
+                                                    <td>@product.Price.ToString("N0") VND</td>
+                                                    <td>
+                                                        <ul class="d-flex gap-2 list-unstyled">
+                                                            <li>
+                                                                <a asp-action="ProductDetail" asp-controller="AdminRetail" asp-route-id="@product.Id">
+                                                                    <i class="ri-eye-line"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a asp-controller="AdminRetail" asp-action="EditProduct" asp-route-id="@product.Id">
+                                                                    <i class="ri-pencil-line"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
+                                                                   data-bs-target="#exampleModalToggle"><i class="ri-delete-bin-line"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal xác nhận xóa -->
+        <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header d-block text-center">
+                        <h5 class="modal-title w-100">Are You Sure?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="remove-box">
+                            <p>This action will permanently delete the product.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

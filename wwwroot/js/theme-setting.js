@@ -17,7 +17,7 @@ $("#darkButton").on("click", function () {
     $("body").addClass("dark");
     document
         .getElementById("color-link")
-        .setAttribute("href", "../assets/css/dark.css");
+        .setAttribute("href", "~/css/dark.css");
 });
 
 $("#lightButton").on("click", function () {
@@ -26,7 +26,7 @@ $("#lightButton").on("click", function () {
     $("body").addClass("light");
     document
         .getElementById("color-link")
-        .setAttribute("href", "../assets/css/style.css");
+        .setAttribute("href", "~/css/style.css");
     console
 });
 
@@ -38,11 +38,11 @@ $(".rtl").on("click", function () {
         $("html").attr("dir", "rtl");
         $("body").removeClass("ltr");
         $("body").addClass("rtl");
-        $("#rtl-link").attr("href", "../assets/css/vendors/bootstrap.rtl.css");
+        $("#rtl-link").attr("href", "~/css/vendors/bootstrap.rtl.css");
     } else {
         $("html").attr("dir", "");
         $("body").removeClass("rtl");
         $("body").addClass("ltr");
-        $("#rtl-link").attr("href", "../assets/css/vendors/bootstrap.css");
+        $("#rtl-link").attr("href", "~/css/vendors/bootstrap.css");
     }
 });

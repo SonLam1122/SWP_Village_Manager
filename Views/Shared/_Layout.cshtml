@@ -1,4 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.EntityFrameworkCore
+@using Village_Manager.Models
+@using Village_Manager.Utils
+@inject Village_Manager.Data.AppDbContext dbContext
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +32,7 @@
 <body>
     <!-- Header Start -->
     <header class="pb-md-4 pb-0">
-        
+
         <div class="header-top">
             <div class="container-fluid-lg">
                 <div class="row">
@@ -155,28 +160,24 @@
                                     </button>
                                 </div>
 
-                                <div class="search-box">
-                                    <div class="input-group">
-                                        <input type="search" class="form-control" placeholder="I'm searching for...">
-                                        <button class="btn" type="button" id="button-addon2">
-                                            <i data-feather="search"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                                <form method="get" asp-controller="Shop" asp-action="Search" class="search-box"> 
+                                    <div class="input-group"> 
+                                        <input type="text" name="search" class="form-control" placeholder="I'm searching for..." /> 
+                                        <button class="btn" type="submit"> <i data-feather="search"></i> </button> 
+                                    </div> 
+                                    </form>
                             </div>
 
                             <div class="rightside-box">
-                                <div class="search-full">
-                                    <div class="input-group">
-                                        <span class="input-group-text">
-                                            <i data-feather="search" class="font-light"></i>
-                                        </span>
-                                        <input type="text" class="form-control search-type" placeholder="Search here..">
-                                        <span class="input-group-text close-search">
-                                            <i data-feather="x" class="font-light"></i>
-                                        </span>
-                                    </div>
-                                </div>
+                                <form method="get" asp-controller="Shop" asp-action="Search" class="search-full"> 
+                                    <div class="input-group"> 
+                                        <span class="input-group-text"> <i data-feather="search" class="font-light"></i> </span> 
+                                        <input type="text" name="search" class="form-control search-type" placeholder="Search here.." /> 
+                                        <button class="input-group-text" type="submit"> <i data-feather="arrow-right" class="font-light"></i> </button> 
+                                        <span class="input-group-text close-search"> <i data-feather="x" class="font-light"></i> </span> 
+                                    </div> 
+                                    </form>
+
                                 <ul class="right-side-menu">
                                     <li class="right-side">
                                         <div class="delivery-login-box">
@@ -208,62 +209,67 @@
                                             <button type="button" class="btn p-0 position-relative header-wishlist">
                                                 <i data-feather="shopping-cart"></i>
                                                 <span class="position-absolute top-0 start-100 translate-middle badge">
-                                                    2
-                                                    <span class="visually-hidden">unread messages</span>
+                                                    @(ViewBag.CartCount ?? 0)
                                                 </span>
                                             </button>
 
+
+                                            @{
+                                                var cartItems = CartHelper.GetCartWithProducts(Context, dbContext);
+                                                var total = cartItems.Sum(i => (i.Product?.Price ?? 0) * i.Quantity);
+                                            }
+
                                             <div class="onhover-div">
+
                                                 <ul class="cart-list">
-                                                    <li class="product-box-contain">
-                                                        <div class="drop-cart">
-                                                            <a href="product-left-thumbnail.html" class="drop-image">
-                                                                <img src="~/images/vegetable/product/1.png"
-                                                                     class="blur-up lazyload" alt="">
-                                                            </a>
+                                                    @if (cartItems.Count > 0)
+                                                    {
+                                                        foreach (var item in cartItems)
+                                                        {
+                                                           <li class="product-box-contain">
+                                                                <div class="drop-cart d-flex">
+                                                                    <a href="/shop/detail/@item.ProductId" class="drop-image">
+                                                                        <img src="@(item.Product?.ProductImages?.FirstOrDefault()?.ImageUrl ?? "/images/product/default-product.png")"
+                                                         class="blur-up lazyloaded" alt="@item.Product?.Name" />
+                                                                    </a>
 
-                                                            <div class="drop-contain">
-                                                                <a href="product-left-thumbnail.html">
-                                                                    <h5>Fantasy Crunchy Choco Chip Cookies</h5>
-                                                                </a>
-                                                                <h6><span>1 x</span> $80.58</h6>
-                                                                <button class="close-button close_button">
-                                                                    <i class="fa-solid fa-xmark"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </li>
+                                                                    <div class="drop-contain w-100">
+                                                                        <div class="d-flex justify-content-between align-items-start w-100">
+                                                                            <!-- Bên trái: tên sản phẩm -->
+                                                                            <div class="flex-grow-1 me-3">
+                                                                                <a href="/shop/detail/@item.ProductId" class="text-decoration-none text-dark">
+                                                                                    <h5 class="mb-1">@item.Product?.Name</h5>
+                                                                                </a>
+                                                                                <h6 class="mb-0"><span>@item.Quantity x</span> ₫@String.Format("{0:N0}", item.Product?.Price)</h6>
+                                                                            </div>
 
-                                                    <li class="product-box-contain">
-                                                        <div class="drop-cart">
-                                                            <a href="product-left-thumbnail.html" class="drop-image">
-                                                                <img src="~/images/vegetable/product/2.png"
-                                                                     class="blur-up lazyload" alt="">
-                                                            </a>
-
-                                                            <div class="drop-contain">
-                                                                <a href="product-left-thumbnail.html">
-                                                                    <h5>
-                                                                        Peanut Butter Bite Premium Butter Cookies 600 g
-                                                                    </h5>
-                                                                </a>
-                                                                <h6><span>1 x</span> $25.68</h6>
-                                                                <button class="close-button close_button">
-                                                                    <i class="fa-solid fa-xmark"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </li>
+                                                                            <!-- Bên phải: nút x -->
+                                                                            <div style="flex-shrink: 0;">
+                                                                                <a href="/shop/removefromcart/@item.ProductId" class="text-dark">
+                                                                                    <i class="fa-solid fa-xmark"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="text-center p-2">Your cart is empty.</li>
+                                                    }
                                                 </ul>
 
                                                 <div class="price-box">
                                                     <h5>Total :</h5>
-                                                    <h4 class="theme-color fw-bold">$106.58</h4>
+                                                    <h4 class="theme-color fw-bold">₫@String.Format("{0:N0}", total)</h4>
                                                 </div>
 
+
                                                 <div class="button-group">
-                                                    <a href="cart.html" class="btn btn-sm cart-button">View Cart</a>
-                                                    <a href="checkout.html" class="btn btn-sm cart-button theme-bg-color
+                                                    <a href="/shop/cart" class="btn btn-sm cart-button">View Cart</a>
+                                                    <a href="/shop/checkout" class="btn btn-sm cart-button theme-bg-color
                                                     text-white">Checkout</a>
                                                 </div>
                                             </div>
@@ -288,7 +294,7 @@
                                                 </h5>
                                             </div>
                                         </div>
-                                        
+
                                         @if (string.IsNullOrEmpty(username))
                                         {
                                             <div class="onhover-div onhover-div-login">
@@ -803,42 +809,12 @@
                                                    data-bs-toggle="dropdown">Shop</a>
 
                                                 <ul class="dropdown-menu">
+
                                                     <li>
-                                                        <a class="dropdown-item" href="shop-category-slider.html">
-                                                            Shop
-                                                            Category Slider
+                                                        <a class="dropdown-item" href="/shop/search">
+                                                            All Products
                                                         </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="shop-category.html">
-                                                            Shop
-                                                            Category Sidebar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="shop-banner.html">Shop Banner</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="shop-left-sidebar.html">
-                                                            Shop Left
-                                                            Sidebar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="/shop-list">Shop List</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="shop-right-sidebar.html">
-                                                            Shop
-                                                            Right Sidebar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="shop-top-filter.html">
-                                                            Shop Top
-                                                            Filter
-                                                        </a>
-                                                    </li>
+
                                                 </ul>
                                             </li>
 
@@ -1273,7 +1249,6 @@
         </div>
     </header>
     <!-- Header End -->
-
     <!-- mobile fix menu start -->
     <div class="fullpage-loader">
         <span></span>
@@ -1314,7 +1289,7 @@
             </li>
 
             <li>
-                <a href="cart.html">
+                <a href="/shop/cart">
                     <i class="iconly-Bag-2 icli fly-cate"></i>
                     <span>Cart</span>
                 </a>
