@@ -46,7 +46,7 @@ public partial class User
 
     public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 
-    public virtual ICollection<Shipper> Shippers { get; set; } = new List<Shipper>();
+   
 
     public virtual ICollection<Staff> Staff { get; set; } = new List<Staff>();
 }

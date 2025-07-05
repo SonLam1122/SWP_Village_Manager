@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Village_Manager.Models;
-
-public partial class Shipper
+namespace Village_Manager.Models
 {
-    public int Id { get; set; }
+    [Table("shipper")]
+    public class Shipper
+    {
+        public int Id { get; set; }
 
-    public int? UserId { get; set; }
+        [Column("user_id")]
+        public int UserId { get; set; }
 
-    public string? FullName { get; set; }
+        [Column("full_name")]
+        public string? FullName { get; set; }
 
-    public string Phone { get; set; } = null!;
+        [Column("phone")]
+        public string? Phone { get; set; }
 
-    public string? VehicleInfo { get; set; }
-
-    public virtual ICollection<Delivery> Deliveries { get; set; } = new List<Delivery>();
-
-    public virtual User? User { get; set; }
-}
+        [Column("vehicle_info")]
+        public string? VehicleInfo { get; set; }
+    }
+} 

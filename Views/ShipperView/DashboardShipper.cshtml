@@ -1,0 +1,266 @@
+@using System.Linq
+@* Place the style block at the very top to avoid Razor parsing errors *@
+<style>
+    .dashboard-left-sidebar {
+        background: #fff;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        border-radius: 1.5rem;
+        padding: 2rem 1rem 1rem 1rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .dashboard-left-sidebar .profile-box {
+        margin-bottom: 2rem;
+    }
+    .dashboard-left-sidebar .profile-image img {
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 3px solid #f3f6fa;
+    }
+    .dashboard-left-sidebar .profile-name h5 {
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+    .dashboard-left-sidebar .profile-name small {
+        color: #888;
+    }
+    .dashboard-left-sidebar .nav-pills .nav-link {
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.25rem;
+        font-size: 1.08rem;
+        font-weight: 500;
+        color: #333;
+        background: none;
+        transition: background 0.2s, color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .dashboard-left-sidebar .nav-pills .nav-link.active, .dashboard-left-sidebar .nav-pills .nav-link:focus {
+        background: linear-gradient(90deg, #0da487 0%, #36b37e 100%);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(13,164,135,0.08);
+    }
+    .dashboard-left-sidebar .nav-pills .nav-link:hover:not(.active) {
+        background: #f3f6fa;
+        color: #0da487;
+    }
+    .dashboard-left-sidebar .nav-pills .nav-link i {
+        font-size: 1.25rem;
+        min-width: 1.5rem;
+        text-align: center;
+    }
+    @@media (max-width: 991px) {
+        .dashboard-left-sidebar {
+            min-height: unset;
+            padding: 1rem 0.5rem;
+        }
+    }
+</style>
+
+@{
+    ViewData["Title"] = "Dashboard Shipper";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fastkart">
+    <meta name="keywords" content="Fastkart">
+    <meta name="author" content="Fastkart">
+    <link rel="icon" href="~/images/favicon/1.png" type="image/x-icon">
+    <title>On-demand last-mile delivery</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <link id="rtl-link" rel="stylesheet" type="text/css" href="~/css/vendors/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/css/bulk-style.css">
+    <link id="color-link" rel="stylesheet" type="text/css" href="~/css/style.css">
+</head>
+<body>
+    <section class="shipper-dashboard-section section-b-space">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-xxl-3 col-lg-4">
+                    <div class="dashboard-left-sidebar">
+                        <div class="w-100 mb-4">
+                            <div class="profile-box text-center mb-3">
+                                <div class="profile-name">
+                                    <h5 class="fw-bold mb-0" id="shipperName">@Model.ShipperName</h5>
+                                    <small class="text-muted" id="shipperEmail">@Model.ShipperEmail</small>
+                                </div>
+                            </div>
+                            <ul class="nav flex-column gap-2 w-100 user-nav-pills">
+                                <li class="nav-item">
+                                    <a href="/dashboardshipper" class="nav-link d-flex align-items-center gap-2">
+                                        <i class="fa fa-home"></i> <span>Dashboard</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/ShipperView/OrdersShipper" class="nav-link d-flex align-items-center gap-2">
+                                        <i class="fa fa-list"></i> <span>Orders</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/ShipperView/DeliveriesShipper" class="nav-link d-flex align-items-center gap-2">
+                                        <i class="fa fa-truck"></i> <span>Deliveries</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/ShipperView/ProfileShipper" class="nav-link d-flex align-items-center gap-2">
+                                        <i class="fa fa-user"></i> <span>Profile</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/ShipperView/HistoryShipper" class="nav-link d-flex align-items-center gap-2">
+                                        <i class="fa fa-history"></i> <span>History</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/ShipperView/NotificationsShipper" class="nav-link d-flex align-items-center gap-2">
+                                        <i class="fa fa-bell"></i> <span>Notifications</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item mt-2">
+                                    <a href="/logout" class="nav-link d-flex align-items-center gap-2">
+                                        <i class="fa fa-sign-out-alt"></i> <span>Log Out</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>  
+                </div>
+                <div class="col-xxl-9 col-lg-8">
+                    <button class="btn left-dashboard-show btn-animation btn-md fw-bold d-block mb-4 d-lg-none">
+                        Show Menu
+                    </button>
+                    <div class="dashboard-right-sidebar">
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel">
+                                <div class="dashboard-home">
+                                    <div class="title mb-4 d-flex align-items-center gap-3">
+                                        <h2 class="fw-bold mb-0" style="letter-spacing:1px;">Shipper Dashboard</h2>
+                                    </div>
+                                    <div class="dashboard-user-name mb-4">
+                                        <h6 class="text-content">Xin chào, <b class="text-title">@ViewBag.ShipperName  "Shipper"</b></h6>
+                                        <p class="text-content">Quản lý các đơn giao hàng và theo dõi trạng thái giao hàng của bạn.</p>
+                                    </div>
+                                    <div class="row g-4 mb-4">
+                                        <div class="col-6 col-lg-3">
+                                            <div class="card border-0 shadow h-100 rounded-4 text-center">
+                                                <div class="card-body py-4">
+                                                    <div class="mb-2">
+                                                        <i class="fa fa-cube fa-2x text-primary"></i>
+                                                    </div>
+                                                    <div class="fs-1 fw-bold text-dark" id="totalDeliveries">@Model.TotalDeliveries</div>
+                                                    <div class="text-muted small mt-1">Tổng đơn giao</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      
+                                        <div class="col-6 col-lg-3">
+                                            <div class="card border-0 shadow h-100 rounded-4 text-center">
+                                                <div class="card-body py-4">
+                                                    <div class="mb-2">
+                                                        <i class="fa fa-clock fa-2x text-warning"></i>
+                                                    </div>
+                                                    <div class="fs-1 fw-bold text-dark" id="pendingOrders">@Model.PendingOrders</div>
+                                                    <div class="text-muted small mt-1">Chờ nhận</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-3">
+                                            <div class="card border-0 shadow h-100 rounded-4 text-center">
+                                                <div class="card-body py-4">
+                                                    <div class="mb-2">
+                                                        <i class="fa fa-check-circle fa-2x text-success"></i>
+                                                    </div>
+                                                    <div class="fs-1 fw-bold text-dark" id="completedOrders">@Model.CompletedOrders</div>
+                                                    <div class="text-muted small mt-1">Hoàn thành</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card border-0 shadow rounded-4">
+                                        <div class="card-header bg-white d-flex justify-content-between align-items-center rounded-top-4">
+                                            <h5 class="mb-0 fw-bold">Đơn hàng gần nhất</h5>
+                                            <a href="/ShipperView/DeliveriesShipper" class="btn btn-sm btn-outline-primary rounded-pill px-3">Xem tất cả</a>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover mb-0 align-middle">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th class="text-center">Mã đơn</th>
+                                                            <th>Khách hàng</th>
+                                                            <th class="text-center">Trạng thái</th>
+                                                            <th>Địa chỉ giao</th>
+                                                            <th class="text-center">Thời gian</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="recentOrdersTbody">
+                                                        @foreach (var order in Model.RecentDeliveries)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">@order.OrderId</td>
+                                                                <td>@order.CustomerName</td>
+                                                                <td class="text-center">@order.Status</td>
+                                                                <td>@order.Address</td>
+                                                                <td class="text-center">@order.Time</td>
+                                                            </tr>
+                                                        }
+                                                        @if (Model.RecentDeliveries == null || Model.RecentDeliveries.Count == 0)
+                                                        {
+                                                            <tr>
+                                                                <td colspan="5" class="text-center text-muted">Không có đơn hàng gần nhất.</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="~/js/jquery-3.6.0.min.js"></script>
+
+    <!-- jquery ui-->
+    <script src="~/js/jquery-ui.min.js"></script>
+
+    <!-- Bootstrap js-->
+    <script src="~/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="~/js/bootstrap/bootstrap-notify.min.js"></script>
+    <script src="~/js/bootstrap/popper.min.js"></script>
+
+    <!-- feather icon js-->
+    <script src="~/js/feather/feather.min.js"></script>
+    <script src="~/js/feather/feather-icon.js"></script>
+
+    <!-- Lazyload Js -->
+    <script src="~/js/lazysizes.min.js"></script>
+
+    <!-- Slick js-->
+    <script src="~/js/slick/slick.js"></script>
+    <script src="~/js/slick/custom_slick.js"></script>
+
+    <!-- Nav & tab upside js -->
+    <script src="~/js/nav-tab.js"></script>
+
+    <!-- script js -->
+    <script src="~/js/script.js"></script>
+
+    <!-- Đã xóa apexchart.js, custom-chart.js, theme-setting.js để tránh lỗi JS -->
+</body>
+</html> 

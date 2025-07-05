@@ -76,7 +76,7 @@ namespace Village_Manager.Controllers
                 HttpContext.Session.SetInt32("UserId", user.Id);
 
                 // role admin
-                if (user.RoleId == 1 || user.RoleId == 3 || user.RoleId == 5)
+                if (user.RoleId == 1 || user.RoleId == 3 || user.RoleId == 5 || user.RoleId == 4)
                 {
                     return RedirectToAction("Index", "Home");
                 }

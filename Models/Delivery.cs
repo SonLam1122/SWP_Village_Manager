@@ -19,5 +19,5 @@ public partial class Delivery
 
     public DateTime? EndTime { get; set; }
 
-    public virtual Shipper? Shipper { get; set; }
+   
 }

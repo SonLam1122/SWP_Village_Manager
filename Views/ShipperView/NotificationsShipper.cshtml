@@ -1,0 +1,81 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Thông báo";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shipper Dashboard">
+    <meta name="keywords" content="Shipper, Delivery">
+    <meta name="author" content="Fastkart">
+    <link rel="icon" href="~/images/favicon/1.png" type="image/x-icon">
+    <title>Shipper Dashboard</title>
+
+    <!-- Google font -->
+    
+    <link rel="stylesheet" href="~/css/vendors/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/css/bulk-style.css">
+    <link id="color-link" rel="stylesheet" type="text/css" href="~/css/style.css">
+</head>
+<body>
+<div class="card shadow rounded-4 p-4">
+    <h3 class="mb-4 fw-bold text-danger"><i class="fa fa-bell me-2"></i>Thông báo</h3>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex align-items-center gap-2">
+            <i class="fa fa-info-circle text-primary"></i>
+            Bạn đã được gán đơn hàng mới #DH003.
+            <span class="ms-auto small text-muted">1 phút trước</span>
+        </li>
+        <li class="list-group-item d-flex align-items-center gap-2">
+            <i class="fa fa-check-circle text-success"></i>
+            Đơn hàng #DH001 đã giao thành công.
+            <span class="ms-auto small text-muted">30 phút trước</span>
+        </li>
+        <li class="list-group-item d-flex align-items-center gap-2">
+            <i class="fa fa-exclamation-triangle text-warning"></i>
+            Đơn hàng #DH002 báo sự cố giao hàng.
+            <span class="ms-auto small text-muted">1 giờ trước</span>
+        </li>
+    </ul>
+        <a href="/dashboardshipper" class="btn btn-outline-secondary mt-4"><i class="fa fa-arrow-left me-1"></i>Quay lại Dashboard</a>
+</div>
+    
+</body>
+<!-- latest jquery-->
+<script src="~/js/jquery-3.6.0.min.js"></script>
+
+<!-- jquery ui-->
+<script src="~/js/jquery-ui.min.js"></script>
+
+<!-- Bootstrap js-->
+<script src="~/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="~/js/bootstrap/bootstrap-notify.min.js"></script>
+<script src="~/js/bootstrap/popper.min.js"></script>
+
+<!-- feather icon js-->
+<script src="~/js/feather/feather.min.js"></script>
+<script src="~/js/feather/feather-icon.js"></script>
+
+<!-- Lazyload Js -->
+<script src="~/js/lazysizes.min.js"></script>
+
+<!-- Slick js-->
+<script src="~/js/slick/slick.js"></script>
+<script src="~/js/slick/custom_slick.js"></script>
+
+<!-- Apexcharts Js -->
+<script src="~/js/apexchart.js"></script>
+<script src="~/js/custom-chart.js"></script>
+
+<!-- Nav & tab upside js -->
+<script src="~/js/nav-tab.js"></script>
+
+<!-- script js -->
+<script src="~/js/script.js"></script>
+
+<!-- theme setting js -->
+<script src="~/js/theme-setting.js"></script>
+</html>

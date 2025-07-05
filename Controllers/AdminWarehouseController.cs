@@ -1,5 +1,4 @@
-
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -141,11 +140,11 @@ public class AdminWarehouseController : Controller
             {
                 Name = form["name"],
                 ProductType = form["product_type"],
-                CategoryId = int.Parse(form["category_id"]),
-                Quantity = int.Parse(form["quantity"]),
-                Price = decimal.Parse(form["price"]),
-                ExpirationDate = string.IsNullOrWhiteSpace(form["expiration_date"]) ? null : DateTime.Parse(form["expiration_date"]),
-                ProcessingTime = string.IsNullOrWhiteSpace(form["processing_time"]) ? null : DateTime.Parse(form["processing_time"]),
+                CategoryId = int.TryParse(form["category_id"], out int categoryId) ? categoryId : 0,
+                Quantity = int.TryParse(form["quantity"], out int quantity) ? quantity : 0,
+                Price = decimal.TryParse(form["price"], out decimal price) ? price : 0,
+                ExpirationDate = string.IsNullOrWhiteSpace(form["expiration_date"]) ? null : (DateTime.TryParse(form["expiration_date"], out DateTime expDate) ? expDate : (DateTime?)null),
+                ProcessingTime = string.IsNullOrWhiteSpace(form["processing_time"]) ? null : (DateTime.TryParse(form["processing_time"], out DateTime procTime) ? procTime : (DateTime?)null),
                 FarmerId = int.TryParse(form["farmer_id"], out int farmerId) ? farmerId : (int?)null
             };
 
@@ -158,11 +157,11 @@ public class AdminWarehouseController : Controller
                 {
                     if (file.Length > 0)
                     {
-                        string uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                        string uploadsFolder = _env.WebRootPath != null ? Path.Combine(_env.WebRootPath, "uploads") : "uploads";
                         Directory.CreateDirectory(uploadsFolder);
 
                         string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        string filePath = !string.IsNullOrEmpty(uploadsFolder) ? Path.Combine(uploadsFolder, uniqueFileName) : uniqueFileName;
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
@@ -219,7 +218,7 @@ public class AdminWarehouseController : Controller
 
         foreach (var image in images)
         {
-            var filePath = Path.Combine(_env.WebRootPath, "uploads", image.ImageUrl);
+                                    var filePath = _env.WebRootPath != null ? Path.Combine(_env.WebRootPath, "uploads", image.ImageUrl) : Path.Combine("uploads", image.ImageUrl);
             if (System.IO.File.Exists(filePath))
             {
                 System.IO.File.Delete(filePath);
@@ -296,7 +295,7 @@ public class AdminWarehouseController : Controller
                 {
                     var fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName())
                                     + Path.GetExtension(file.FileName);
-                    var path = Path.Combine("wwwroot/images", fileName);
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
                     using (var stream = new FileStream(path, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
@@ -467,7 +466,7 @@ public class AdminWarehouseController : Controller
             {
                 Username = user.Username.Trim(),
                 Email = user.Email.Trim(),
-                Password = HashPassword(user.Password),
+                Password = user.Password,
                 RoleId = user.RoleId,
                 Phone = user.Phone?.Trim(),
                 CreatedAt = DateTime.Now
@@ -491,6 +490,20 @@ public class AdminWarehouseController : Controller
                 await _context.SaveChangesAsync();
             }
 
+            var shipperRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name.ToLower() == "shipper");
+            if (shipperRole != null && newUser.RoleId == shipperRole.Id)
+            {
+                var newShipper = new Shipper
+                {
+                    UserId = newUser.Id,
+                    FullName = newUser.Username, // hoặc lấy từ form nếu có
+                    Phone = newUser.Phone,
+                    VehicleInfo = "" // lấy từ form nếu có
+                };
+                _context.Shippers.Add(newShipper);
+                await _context.SaveChangesAsync();
+            }
+
             var currentUserId = HttpContext.Session.GetInt32("UserId");
             LogHelper.SaveLog(_context, currentUserId, $"Thêm user mới: {newUser.Username} (ID: {newUser.Id})");
             TempData["SuccessMessage"] = "User created successfully!";
@@ -502,15 +515,6 @@ public class AdminWarehouseController : Controller
             ModelState.AddModelError("", "An error occurred while creating the user. Please try again.");
             ViewBag.Roles = await _context.Roles.ToListAsync();
             return View(user);
-        }
-    }
-
-    private string HashPassword(string password)
-    {
-        using (var sha256 = SHA256.Create())
-        {
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(hashedBytes);
         }
     }
 
@@ -604,7 +608,7 @@ public class AdminWarehouseController : Controller
             // Nếu có nhập mật khẩu mới thì cập nhật
             if (!string.IsNullOrEmpty(newPassword))
             {
-                existingUser.Password = HashPassword(newPassword);
+                existingUser.Password = newPassword;
                 _logger.LogInformation($"Password updated for user. UserId: {id}");
             }
             // Lưu thay đổi
@@ -633,6 +637,30 @@ public class AdminWarehouseController : Controller
                     farmer.FullName = existingUser.Username; // hoặc lấy từ form nếu có trường tên đầy đủ
                     farmer.Phone = existingUser.Phone;
                     // farmer.Address = ... // lấy từ form nếu có
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            var shipperRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name.ToLower() == "shipper");
+            if (shipperRole != null && existingUser.RoleId == shipperRole.Id)
+            {
+                var shipper = await _context.Shippers.FirstOrDefaultAsync(s => s.UserId == existingUser.Id);
+                if (shipper == null)
+                {
+                    shipper = new Shipper
+                    {
+                        UserId = existingUser.Id,
+                        FullName = existingUser.Username,
+                        Phone = existingUser.Phone,
+                        VehicleInfo = ""
+                    };
+                    _context.Shippers.Add(shipper);
+                }
+                else
+                {
+                    shipper.FullName = existingUser.Username;
+                    shipper.Phone = existingUser.Phone;
+                    // shipper.VehicleInfo = ... // cập nhật nếu có
                 }
                 await _context.SaveChangesAsync();
             }

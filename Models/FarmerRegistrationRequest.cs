@@ -13,15 +13,15 @@ namespace Village_Manager.Models
 
         [Required]
         [StringLength(100)]
-        public string full_name { get; set; }
+        public string full_name { get; set; } = string.Empty;
 
         [Required]
         [Phone]
         [StringLength(20)]
-        public string phone { get; set; }
+        public string phone { get; set; } = string.Empty;
 
         [Required]
-        public string address { get; set; }
+        public string address { get; set; } = string.Empty;
 
         [Required]
         [StringLength(20)]

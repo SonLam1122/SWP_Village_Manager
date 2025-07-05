@@ -66,7 +66,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Session> Sessions { get; set; }
 
-    public virtual DbSet<Shipper> Shippers { get; set; }
+   
 
     public virtual DbSet<Staff> Staff { get; set; }
 
@@ -89,7 +89,9 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<WholesaleOrderItem> WholesaleOrderItems { get; set; }
 
     public DbSet<UserLocation> UserLocations { get; set; }
-
+    public DbSet<DeliveryConfirmation> DeliveryConfirmations { get; set; }
+    public DbSet<DeliveryLog> DeliveryLogs { get; set; }
+    public virtual DbSet<Shipper> Shippers { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
@@ -179,9 +181,7 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("start_time");
 
-            entity.HasOne(d => d.Shipper).WithMany(p => p.Deliveries)
-                .HasForeignKey(d => d.ShipperId)
-                .HasConstraintName("FK__Delivery__shippe__05D8E0BE");
+           
         });
 
         modelBuilder.Entity<Farmer>(entity =>
@@ -650,30 +650,7 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK__Session__user_id__29221CFB");
         });
 
-        modelBuilder.Entity<Shipper>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Shipper__3213E83F6E987342");
-
-            entity.ToTable("Shipper");
-
-            entity.HasIndex(e => e.Phone, "UQ__Shipper__B43B145FA0E0248B").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.FullName)
-                .HasMaxLength(100)
-                .HasColumnName("full_name");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(20)
-                .HasColumnName("phone");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.VehicleInfo)
-                .HasColumnType("text")
-                .HasColumnName("vehicle_info");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Shippers)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Shipper__user_id__5165187F");
-        });
+      
 
         modelBuilder.Entity<Staff>(entity =>
         {
@@ -855,6 +832,17 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.WholesaleOrderItems)
                 .HasForeignKey(d => d.OrderId)
                 .HasConstraintName("FK__Wholesale__order__71D1E811");
+        });
+
+        modelBuilder.Entity<DeliveryLog>(entity =>
+        {
+            entity.ToTable("DeliveryLog");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.DeliveryId).HasColumnName("delivery_id");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Note).HasColumnName("note");
+            entity.Property(e => e.LogTime).HasColumnName("log_time");
+            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
         });
 
         OnModelCreatingPartial(modelBuilder);
