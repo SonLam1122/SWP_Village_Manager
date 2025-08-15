@@ -2,7 +2,7 @@
 
 Hệ thống quản lý làng nông nghiệp tích hợp bán lẻ, kho hàng và giao hàng.
 
-## 🚀 Tính năng chính
+##  Tính năng chính
 
 - **Quản lý sản phẩm**: Danh mục, hình ảnh, kho hàng
 - **Bán lẻ**: Giỏ hàng, đặt hàng, thanh toán
@@ -11,7 +11,7 @@ Hệ thống quản lý làng nông nghiệp tích hợp bán lẻ, kho hàng v�
 - **Giao hàng**: Đơn hàng, vận chuyển, theo dõi
 - **Quản trị**: Phân quyền, báo cáo, thống kê
 
-## 🛠️ Công nghệ
+##  Công nghệ
 
 - **Backend**: .NET 8, Entity Framework Core
 - **Database**: SQL Server
@@ -19,13 +19,13 @@ Hệ thống quản lý làng nông nghiệp tích hợp bán lẻ, kho hàng v�
 - **Authentication**: Cookie + Google OAuth
 - **Email**: MailKit
 
-## 📋 Yêu cầu hệ thống
+##  Yêu cầu hệ thống
 
 - .NET 8.0 SDK
 - SQL Server
 - Visual Studio 2022 hoặc VS Code
 
-## 🔐 Đăng nhập
+## Role đăng nhập
 
 - **Admin**: Quản lý toàn bộ hệ thống
 - **Nông dân**: Quản lý sản phẩm và đơn hàng
